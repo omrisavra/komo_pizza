@@ -1,26 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { FC, useMemo } from "react";
+import { Client, Provider } from "urql";
+import Navbar from "./components/navbar/navbar";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-function App() {
+import GlobalStyles from "./styles/global";
+import Toppings from "./components/toppings/toppings";
+import Pizzas from "./components/pizzas/pizzas";
+import Orders from "./components/Orders/orders";
+
+const App: FC = () => {
+  const gqlServer = "http://localhost:8080/v1/graphql";
+  const urqlClient = useMemo(() => new Client({ url: gqlServer }), [gqlServer]);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <GlobalStyles />
+      <Router>
+        <Navbar />
+        <Switch>
+          <Provider value={urqlClient}>
+            <Route path="/" component={Pizzas} />
+            <Route path="/toppings" component={Toppings} />
+            <Route path="/orders" component={Orders} />
+          </Provider>
+        </Switch>
+      </Router>
     </div>
   );
-}
+};
 
 export default App;
