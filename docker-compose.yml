@@ -1,0 +1,35 @@
+# docker-compose.yml
+version: '3'
+
+x-defaults:
+  database-url: &database-url postgres://unicorn_user:magical_password@database:5432/rainbow_database
+
+services:
+  database:
+    # ports:
+    #   - "5432:5432"
+    image: "postgres" # use latest official postgres version
+    env_file:
+      - database.env # configure postgres
+    volumes:
+      - database-data:/var/lib/postgresql/data/ # persist data even if container shuts down
+  
+  graphql-engine:
+    image: hasura/graphql-engine:latest.cli-migrations-v2
+    ports:
+    - "8080:8080"
+    depends_on:
+    - "database"
+    restart: always
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: *database-url
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+
+  web:
+    image: "pizza-app:dev"
+    ports:
+    - "3000:3000"
+
+    
+volumes:
+  database-data: # named volumes can be managed easier using docker-compose
