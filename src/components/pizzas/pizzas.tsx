@@ -2,7 +2,7 @@ import { useQuery } from "urql";
 
 import { PizzaWrapper } from "./pizzas.styles";
 
-const testQuery = `query MyQuery {
+const pizzaQuery = `query MyQuery {
     pizzas {
       name
       price
@@ -27,8 +27,8 @@ const PizzaContainer = (pizza: PizzaTypes) => {
 };
 
 const Pizzas = () => {
-  const [result, reexecuteQuery] = useQuery({
-    query: testQuery,
+  const [result, _reexecuteQuery] = useQuery({
+    query: pizzaQuery,
   });
   const { data, fetching, error } = result;
   if (data) {
@@ -37,7 +37,6 @@ const Pizzas = () => {
         <ul className="pizza-list">
           <PizzaWrapper>
             {data.pizzas.map((pizza: PizzaTypes) => {
-              console.log("pizza", pizza);
               return <PizzaContainer {...pizza} />;
             })}
           </PizzaWrapper>

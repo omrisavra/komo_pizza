@@ -1,7 +1,12 @@
 import { FC, useMemo } from "react";
 import { Client, Provider } from "urql";
 import Navbar from "./components/navbar/navbar";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 
 import GlobalStyles from "./styles/global";
 import Toppings from "./components/toppings/toppings";
@@ -18,9 +23,10 @@ const App: FC = () => {
         <Navbar />
         <Switch>
           <Provider value={urqlClient}>
-            <Route path="/" component={Pizzas} />
+            <Redirect exact from="/" to="/pizzas" />
             <Route path="/toppings" component={Toppings} />
             <Route path="/orders" component={Orders} />
+            <Route path="/pizzas" component={Pizzas} />
           </Provider>
         </Switch>
       </Router>
